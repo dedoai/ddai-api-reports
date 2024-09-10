@@ -13,6 +13,7 @@ const responseDTO = (statusCode, data) => {
 }
 
 const getDbSecretPwd = async () => {
+    console.log('getting secret ' + process.env.DB_SECRET_PASS_ID)
     const response = await client.send(new GetSecretValueCommand({ SecretId: process.env.DB_SECRET_PASS_ID }));
     console.log('sec')
     console.log(JSON.stringify(response))
