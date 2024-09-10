@@ -13,14 +13,16 @@ const responseDTO = (statusCode, data) => {
 }
 
 const getDbSecretPwd = async () => {
+    const command = new GetSecretValueCommand({ SecretId: process.env.DB_SECRET_PASS_ID })
+
     console.log('getting secret ' + process.env.DB_SECRET_PASS_ID)
-    const response = await client.send(new GetSecretValueCommand({ SecretId: process.env.DB_SECRET_PASS_ID }));
+    const response = await client.send(command);
     console.log('sec')
-    console.log(JSON.stringify(response))
+    console.log(response)
     if (!response?.SecretString)
         throw new Error('Failed to get secret')
 
-    return response?.SecretString;
+    return JSON.parse(response?.SecretString).password
 }
 
 module.exports = {
