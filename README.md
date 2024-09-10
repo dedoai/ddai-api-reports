@@ -1,64 +1,163 @@
-Welcome to the AWS CodeStar sample web application
-==================================================
+kk
+# ddai-api-reports
 
-This sample code helps get you started with a simple Node.js web service deployed by AWS CloudFormation to AWS Lambda and Amazon API Gateway.
+![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
+![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-yellow)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-What's Here
------------
+**dedoAI** - Reports API Service
 
-This sample includes:
+---
 
-* README.md - this file
-* buildspec.yml - this file is used by AWS CodeBuild to package your
-  application for deployment to AWS Lambda
-* index.js - this file contains the sample Node.js code for the web service
-* template.yml - this file contains the AWS Serverless Application Model (AWS SAM) used
-  by AWS CloudFormation to deploy your application to AWS Lambda and Amazon API
-  Gateway.
-* tests/ - this directory contains unit tests for your application
-* template-configuration.json - this file contains the project ARN with placeholders used for tagging resources with the project ID
+## Overview
 
-What Do I Do Next?
-------------------
+The `ddai-api-reports` service is an AWS Lambda function dockerized to expose a set of reporting APIs used by the dedoAI platform. It provides useful report-related data to the platform portal, offering easy integration and scalability through the serverless architecture.
 
-If you have checked out a local copy of your repository you can start making
-changes to the sample code.  We suggest making a small change to index.js first,
-so you can see how changes pushed to your project's repository are automatically
-picked up by your project pipeline and deployed to AWS Lambda and Amazon API Gateway.
-(You can watch the pipeline progress on your AWS CodeStar project dashboard.)
-Once you've seen how that works, start developing your own code, and have fun!
+---
 
-To run your tests locally, go to the root directory of the
-sample code and run the `npm test` command, which
-AWS CodeBuild also runs through your `buildspec.yml` file.
+## Features
 
-To test your new code during the release process, modify the existing tests or
-add tests to the tests directory. AWS CodeBuild will run the tests during the
-build stage of your project pipeline. You can find the test results
-in the AWS CodeBuild console.
+- **Report Data Retrieval**: Retrieve pre-defined reports for the platform.
+- **Error Handling**: Structured error handling through custom error classes.
+- **PostgreSQL Integration**: Connects to a PostgreSQL database to fetch and aggregate report data.
+- **Secrets Management**: Uses AWS Secrets Manager to securely manage database credentials.
+- **Scalable**: Dockerized Lambda for easy deployment and scaling.
 
-Learn more about AWS CodeBuild and how it builds and tests your application here:
-https://docs.aws.amazon.com/codebuild/latest/userguide/concepts.html
+---
 
-Learn more about AWS Serverless Application Model (AWS SAM) and how it works here:
-https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md
+## Technologies
 
-AWS Lambda Developer Guide:
-https://docs.aws.amazon.com/lambda/latest/dg/deploying-lambda-apps.html
+- **Node.js**: The core backend logic is written in Node.js.
+- **AWS Lambda**: Serverless compute service used to handle API requests.
+- **Docker**: The Lambda function is containerized for easy deployment.
+- **PostgreSQL**: The service connects to a PostgreSQL database to retrieve data.
+- **AWS Secrets Manager**: Used for securely managing database credentials.
 
-Learn more about AWS CodeStar by reading the user guide, and post questions and
-comments about AWS CodeStar on our forum.
+---
 
-User Guide: https://docs.aws.amazon.com/codestar/latest/userguide/welcome.html
+## Getting Started
 
-Forum: https://forums.aws.amazon.com/forum.jspa?forumID=248
+### Prerequisites
 
-What Should I Do Before Running My Project in Production?
-------------------
+Before setting up the service, ensure you have the following tools installed:
 
-AWS recommends you review the security best practices recommended by the framework
-author of your selected sample application before running it in production. You
-should also regularly review and apply any available patches or associated security
-advisories for dependencies used within your application.
+- **Node.js** (version 14.x or higher)
+- **AWS CLI**: To interact with AWS services.
+- **Docker**: Required for packaging and testing the Lambda function locally.
 
-Best Practices: https://docs.aws.amazon.com/codestar/latest/userguide/best-practices.html?icmpid=docs_acs_rm_sec
+### Setup
+
+1. Clone this repository:
+
+    ```bash
+    git clone https://github.com/dedoAI/ddai-api-reports.git
+    cd ddai-api-reports
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+3. Set up AWS credentials:
+
+    ```bash
+    aws configure
+    ```
+
+4. Build and package the Lambda function using Docker:
+
+    ```bash
+    docker build -t ddai-api-reports .
+    ```
+
+---
+
+## API Endpoints
+
+The following APIs are exposed by this service:
+
+| Method | Endpoint               | Description              |
+|--------|------------------------|--------------------------|
+| GET    | `/reports`             | Fetch report data        |
+
+### Example Request
+
+```bash
+curl -X GET "https://your-api-endpoint/reports?name=report_name"
+```
+
+### Query Parameters
+
+- `name`: The name of the report to fetch (required).
+- `offset`: (Optional) Pagination offset.
+- `limit`: (Optional) Pagination limit (default is 20).
+
+---
+
+## Error Handling
+
+The service uses a custom `ApplicationError` class to handle errors and provide appropriate HTTP status codes and messages. If an input validation error occurs, the API will return a `400 Bad Request` with details about the validation issue.
+
+---
+
+## Deployment
+
+To deploy the service to AWS, you can use Docker to package the Lambda function and deploy it manually or using AWS tools like CloudFormation.
+
+1. Build the Docker image:
+
+    ```bash
+    docker build -t ddai-api-reports .
+    ```
+
+2. Push the image to an AWS ECR repository:
+
+    ```bash
+    docker tag ddai-api-reports:latest 123456789012.dkr.ecr.region.amazonaws.com/ddai-api-reports:latest
+    docker push 123456789012.dkr.ecr.region.amazonaws.com/ddai-api-reports:latest
+    ```
+
+3. Deploy the Lambda function (make sure to update the `template.yaml` with correct settings).
+
+---
+
+## Configuration
+
+### AWS Secrets Manager
+
+This service retrieves the PostgreSQL database password from AWS Secrets Manager using the `getDbSecretPwd` function defined in `utils.js`. Ensure you have set up the necessary secrets in AWS and have the correct secret ID in your environment variables.
+
+---
+
+## Testing
+
+To test the service locally:
+
+1. Start the Docker container locally:
+
+    ```bash
+    docker run -p 3000:3000 ddai-api-reports
+    ```
+
+2. Run the tests:
+
+    ```bash
+    npm test
+    ```
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+
+For further information or support, please reach out to the **dedoAI** team:
+
+- **Email**: support@dedo.org
+- **Website**: [dedo.org](https://www.dedo.org)
