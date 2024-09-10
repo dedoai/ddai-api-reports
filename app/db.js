@@ -7,7 +7,7 @@ const getDbConnection = async () => {
         user: process.env.DB_USER,
         host: process.env.DB_HOST,
         database: process.env.DB_NAME,
-        password: pwd,
+        password: process.env.DB_PASS,
         port: process.env.DB_PORT,
         ssl: { rejectUnauthorized: false }
     })
