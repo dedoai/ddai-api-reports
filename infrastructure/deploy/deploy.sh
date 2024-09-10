@@ -50,7 +50,7 @@ aws cloudformation create-change-set \
 
 # Attendi che il change set sia creato
 echo "In attesa della creazione del change set..."
-aws cloudformation wait change-set-create-complete --stack-name DDAIApiAuthorizer --change-set-name $change_set_name
+aws cloudformation wait change-set-create-complete --stack-name DDAIApiReports --change-set-name $change_set_name
 
 if [ $? -ne 0 ]; then
     echo "Errore nella creazione del change set."
@@ -61,7 +61,7 @@ echo "Change set creato con successo: $change_set_name"
 echo "------------------- ESECUZIONE DEL CHANGE SET ----------------"
 
 # Esegui il change set
-aws cloudformation execute-change-set --stack-name DDAIApiAuthorizer --change-set-name $change_set_name
+aws cloudformation execute-change-set --stack-name DDAIApiReports --change-set-name $change_set_name
 
 if [ $? -eq 0 ]; then
     echo "Change set eseguito con successo."
