@@ -9,7 +9,7 @@ const get = async (getDTO) => {
     const query = 'SELECT * FROM ' + name + ' OFFSET $1 LIMIT $2 '
     result = await db.query(query, [offset, limit])
 
-    return result.rows.length === 1 ? result.rows[0] : result.rows
+    return result.rows
 }
 
 module.exports = {
