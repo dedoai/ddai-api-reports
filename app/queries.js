@@ -11,7 +11,13 @@ const queries = {
                          on dt.owner_id  = us.id 
                          group by us.username 
                          order by total_price desc 
-                         OFFSET $1 LIMIT $2`
+                         OFFSET $1 LIMIT $2`,
+    best_rewards: `SELECT us.username as user, COALESCE(SUM(callfordata.reward)) as total_rewards
+                        FROM users us  inner join c4d callfordata
+                        on callfordata.consumer_id  = us.id 
+                        group by us.username 
+                        order  by total_rewards desc 
+                        OFFSET $1 LIMIT $2`
 }
 module.exports = {
     queries
