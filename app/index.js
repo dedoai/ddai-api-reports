@@ -1,16 +1,20 @@
 const { get } = require('./functions/get')
 const { responseDTO } = require('./utils')
 const ApplicationError = require('./ApplicationError')
+const { validate } = require('./validator')
+const { getDTO } = require('./validatorSchemas/get')
+
 exports.handler = async (event) => {
 
     const { httpMethod } = event.requestContext
     let result;
-
+    let validatedInput;
     try {
         switch (httpMethod) {
             case 'GET':
-                console.log('report get request received', JSON.stringify(event.queryStringParameters))
-                result = await get(event.queryStringParameters)
+                console.log(`get request received with params: `, JSON.stringify(event.queryStringParameters))
+                validatedInput = validate(event.queryStringParameters, getDTO)
+                result = await get(validatedInput)
                 return responseDTO(200, result)
             default:
                 return responseDTO(405, 'Method not allowed')

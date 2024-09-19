@@ -4,13 +4,12 @@ const {
 } = require('@aws-sdk/client-secrets-manager')
 
 const client = new SecretsManagerClient();
+const { CORS_HEADERS } = require('./constants')
 
 const responseDTO = (statusCode = 200, body = {}, headers = {}) => ({
     statusCode: statusCode,
     headers: {
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "*",
+        ...CORS_HEADERS,
         ...headers
     },
     body: JSON.stringify(body)

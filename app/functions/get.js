@@ -1,14 +1,10 @@
 const { getDbConnection } = require('../db')
-const { validateGetDTO } = require('../validators')
-
-const get = async (getDTO) => {
-
-    const value = validateGetDTO(getDTO);
-    const { name, limit, offset } = value
+const { queries } = require('../queries')
+const get = async (input) => {
+    const { name, limit, offset } = input
     const db = await getDbConnection()
-    const query = 'SELECT * FROM ' + name + ' OFFSET $1 LIMIT $2 '
-    result = await db.query(query, [offset, limit])
-
+    result = await db.query(queries[name], [offset, limit])
+    await db.end()
     return result.rows
 }
 
