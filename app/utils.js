@@ -2,9 +2,10 @@ const {
     SecretsManagerClient,
     GetSecretValueCommand,
 } = require('@aws-sdk/client-secrets-manager')
-
-const client = new SecretsManagerClient();
+const ld = require('lodash')
 const { CORS_HEADERS, ERRORS } = require('./constants')
+const client = new SecretsManagerClient();
+
 
 const manageResponse = (statusCode, body, headers) => {
     if (statusCode == 200) {
@@ -36,7 +37,6 @@ const getDbSecretPwd = async () => {
     const response = await client.send(command);
     if (!response?.SecretString)
         throw new Error('Failed to get secret')
-
     return JSON.parse(response?.SecretString).password
 }
 
