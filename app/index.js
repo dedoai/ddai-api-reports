@@ -16,7 +16,7 @@ exports.handler = async (event) => {
                 console.log(`get request received with params: `, JSON.stringify(event.queryStringParameters))
                 validatedInput = validate(event.queryStringParameters, getDTO)
                 result = await get(validatedInput)
-                return manageResponse(200, transformInput(result, TRANSFORM_FORMATS.snake))
+                return manageResponse(200, transformInput(result, TRANSFORM_FORMATS.camel))
             default:
                 return manageResponse(405)
         }

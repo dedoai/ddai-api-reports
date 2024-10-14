@@ -20,5 +20,6 @@ module.exports = {
     CORS_HEADERS,
     DEFAULT_LIMIT,
     DEFAULT_OFFSET,
-    ERRORS
+    ERRORS,
+    TRANSFORM_FORMATS
 }
